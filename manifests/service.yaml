@@ -6,6 +6,7 @@ metadata:
   name: haproxy-ingress
   namespace: default
 spec:
+  type: NodePort
 #   externalIPs:
 #     - 10.245.1.4
   ports:

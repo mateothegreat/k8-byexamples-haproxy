@@ -14,12 +14,14 @@ spec:
       labels:
         app: haproxy-ingress
     spec:
+      serviceAccountName: haproxy-ingress-controller
       containers:
       - name: haproxy-ingress
         image: quay.io/jcmoraisjr/haproxy-ingress
         args:
-        - --default-backend-service=default/ingress-default-backend
-        - --default-ssl-certificate=default/tls-secret
+        - --default-backend-service=$(POD_NAMESPACE)/default-http-backend
+        # - --default-backend-service=$(POD_NAMESPACE)/ingress-default-backend
+        - --default-ssl-certificate=$(POD_NAMESPACE)/$SECRET_NAME
         - --configmap=$(POD_NAMESPACE)/haproxy-configmap
         - --reload-strategy=native
         ports:

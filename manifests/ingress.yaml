@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: haproxy-ingress-test
+  annotations:
+    kubernetes.io/ingress.class: "haproxy"  
+spec:
+  rules:
+  - host: foo.bar
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: echoserver
+          servicePort: 8080

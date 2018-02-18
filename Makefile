@@ -8,4 +8,14 @@
 include .make/Makefile.inc
 
 NS          ?= default
-APP         ?= haproxy
+APP         ?= haproxy-ingress
+SECRET_NAME ?= tls-secret-haproxy-ingress
+export
+
+install:    tls
+delete:     tls_delete_secret
+test:
+
+	nmap -P0 -p80,443 haproxy-ingress
+	
+	curl haproxy-ingress -H 'Host: foo.bar'
