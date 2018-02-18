@@ -84,3 +84,4 @@ BODY:
 ## See also
 
 * https://github.com/jcmoraisjr/haproxy-ingress
+* https://www.haproxy.com/blog/haproxy_ingress_controller_for_kubernetes/
