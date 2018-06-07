@@ -1,29 +1,32 @@
 apiVersion: extensions/v1beta1
-kind: Deployment
+kind: DaemonSet
 metadata:
   labels:
-    app: haproxy-ingress
+    run: haproxy-ingress
   name: haproxy-ingress
+  namespace: ingress-controller
 spec:
-  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
   selector:
     matchLabels:
-        app: haproxy-ingress
+      run: haproxy-ingress
   template:
     metadata:
       labels:
-        app: haproxy-ingress
+        run: haproxy-ingress
     spec:
-      serviceAccountName: haproxy-ingress-controller
+      hostNetwork: true
+      nodeSelector:
+        role: ingress-controller
+      serviceAccountName: ingress-controller
       containers:
       - name: haproxy-ingress
         image: quay.io/jcmoraisjr/haproxy-ingress
         args:
-        - --default-backend-service=$(POD_NAMESPACE)/default-http-backend
-        # - --default-backend-service=$(POD_NAMESPACE)/ingress-default-backend
-        - --default-ssl-certificate=$(POD_NAMESPACE)/$SECRET_NAME
-        - --configmap=$(POD_NAMESPACE)/haproxy-configmap
-        - --reload-strategy=native
+        - --default-backend-service=$(POD_NAMESPACE)/ingress-default-backend
+        - --configmap=$(POD_NAMESPACE)/haproxy-ingress
+        - --sort-backends
         ports:
         - name: http
           containerPort: 80
